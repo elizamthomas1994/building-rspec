@@ -3,13 +3,40 @@ class Expect
     @value = value
   end
 
-  def to_equal(x)
-    if @value == x
-      return "Test passes! :)"
+  def to(comparison)
+    if @value == comparison.compare(true)
+      puts "Test passed! :)"
     else
-      return "Test fails! D:"
+      puts "Test failed! :("
     end
   end
 end
 
-puts Expect.new(true).to_equal(false)
+class Equal
+  def initialize(value)
+    @value = value
+  end
+
+  def compare(comparison)
+    if @value == comparison
+      return true
+    else
+      return false
+    end
+  end
+end
+
+Expect.new(true).to(Equal.new(true)) # should output "Test passed! :)"
+Expect.new(true).to(Equal.new(false)) # should output "Test failed! :("
+
+# Helper methods which are closer to what real rspec looks like:
+
+def expect(value)
+  Expect.new(value)
+end
+
+def eq(value)
+  Equal.new(value)
+end
+
+expect(true).to eq true # should output "Test passed! :)"
